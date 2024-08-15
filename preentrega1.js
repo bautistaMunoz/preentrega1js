@@ -111,7 +111,7 @@ const mostrarFormularioProducto = (categoria) => {
 
     botonBuscarProducto.addEventListener("click", () => {
         const nombreBuscado = inputProducto.value;
-        if (nombreBuscado === '') {
+        if (nombreBuscado === "") {
             alert("Por favor, ingresa un nombre de producto");
             return;
         }
