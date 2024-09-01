@@ -1,0 +1,153 @@
+/* Estilos generales */
+body {
+    font-family: Arial;
+    margin: 0;
+    padding: 0;
+    background-color: #a76868;
+}
+
+header {
+    background-color: #333;
+    color: #fff;
+    padding: 15px;
+    text-align: center;
+}
+
+.btn {
+    background-color: #008cba;
+    color: #fff;
+    border: none;
+    padding: 10px 20px;
+    margin: 5px;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.btn:hover {
+    background-color: #005f5f;
+}
+
+.btnSalir {
+    background-color: #e74c3c;
+    position: fixed;
+    top: 4px;
+    right: 130px;
+}
+
+.btnSalir:hover {
+    background-color: #c0392b;
+}
+
+.formularioNombre, .formularioCategoria {
+    background-color: #fff;
+    padding: 20px;
+    margin: 100px auto;
+    width: 50%;
+    text-align: center;
+    border-radius: 10px;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+}
+
+.formularioNombre input, .formularioCategoria select {
+    width: 80%;
+    padding: 10px;
+    margin: 10px 0;
+    font-size: 16px;
+}
+
+.mainComprar {
+    padding: 20px;
+}
+
+.flexContainer {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 20px;
+}
+
+.card {
+    background-color: #fff;
+    width: 300px;
+    border-radius: 10px;
+    overflow: hidden;
+    box-shadow: 0 2px 5px rgba(0,0,0,0.3);
+    text-align: center;
+    transition: transform 0.3s;
+}
+
+.card:hover {
+    transform: translateY(-5px);
+}
+
+.cardImage {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+}
+
+.cardContent {
+    padding: 15px;
+}
+
+.cardTitle {
+    font-size: 20px;
+    margin-bottom: 10px;
+}
+
+.gallery__price {
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    margin-bottom: 10px;
+}
+
+.galleryPrice10 {
+    text-decoration: line-through;
+    color: #888;
+}
+
+.galleryPrice75 {
+    color: #e74c3c;
+    font-size: 18px;
+    font-weight: bold;
+}
+
+.cardText {
+    font-size: 14px;
+    color: #555;
+    margin-bottom: 15px;
+}
+
+.cardLink {
+    background-color: #27ae60;
+    padding: 10px 20px;
+    border: none;
+    color: #fff;
+    border-radius: 5px;
+    font-size: 16px;
+}
+
+.cardLink:hover {
+    background-color: #1e8449;
+}
+
+.contenedorCarritoFijo {
+    position: fixed;
+    top: 10px;
+    right: 10px;
+    z-index: 1000;
+}
+
+.btnCarrito {
+    padding: 10px 20px;
+    background-color: #007bff;
+    color: white;
+    border: none;
+    border-radius: 5px;
+}
+
+.btnCarrito:hover {
+    background-color: #0056b3;
+}
+

@@ -1,4 +1,5 @@
 const principal = document.getElementById("principal");
+
 let categoriaActual;
 let carrito = [];
 
@@ -6,179 +7,29 @@ if (localStorage.getItem("carrito")) {
     carrito = JSON.parse(localStorage.getItem("carrito"));
 }
 
-const mostrarFormularioNombre = () => {
-    const inputNombre = document.createElement("input");
-    inputNombre.type = "text";
-    inputNombre.id = "nombre";
-    inputNombre.placeholder = "Ingresa tu nombre";
-
-    const botonNombre = document.createElement("button");
-    botonNombre.textContent = "Confirmar nombre";
-
-    principal.appendChild(inputNombre);
-    principal.appendChild(botonNombre);
-
-    botonNombre.addEventListener("click", () => {
-        const nombre = inputNombre.value;
-        if (nombre === "") {
-            alert("Por favor, ingresa tu nombre.");
-        } else {
-            Swal.fire(`Hola, ${nombre}`);
-            principal.innerHTML = '';
-            mostrarFormularioCategoria();
-        }
-    });
-};
-
-const mostrarFormularioCategoria = () => {
-    const selectCategoria = document.createElement("select");
-    ["VEHICULOS", "TECNOLOGIA", "MODA"].forEach(categoria => {
-        const option = document.createElement("option");
-        option.value = categoria;
-        option.textContent = categoria;
-        selectCategoria.appendChild(option);
-    });
-
-    const botonSeleccionarCategoria = document.createElement("button");
-    botonSeleccionarCategoria.textContent = "Seleccionar Categoria";
-    const botonSalir = document.createElement("button");
-    botonSalir.textContent = "Salir";
-
-    principal.appendChild(selectCategoria);
-    principal.appendChild(botonSeleccionarCategoria);
-    principal.appendChild(botonSalir);
-
-    botonSeleccionarCategoria.addEventListener("click", () => {
-        const categoria = selectCategoria.value;
-        switch (categoria) {
-            case "VEHICULOS":
-                categoriaActual = VEHICULOS;
-                break;
-            case "TECNOLOGIA":
-                categoriaActual = TECNOLOGIA;
-                break;
-            case "MODA":
-                categoriaActual = MODA;
-                break;
-            default:
-                alert("Categoria no valida");
-                return;
-        }
-
-        let mensaje = `Productos en la categoria ${categoria}:\n`;
-        categoriaActual.forEach(producto => {
-            mensaje += `${producto.nombre}: $${producto.precio}\n`;
-        });
-        alert(mensaje);
-
-        principal.innerHTML = "";
-        mostrarFormularioProducto(categoria);
-    });
-
-    botonSalir.addEventListener("click", () => {
-        if (confirm("Estas seguro de salir?")) {
-            principal.innerHTML = "";
-            alert("Gracias por visitarnos");
-        }
-    });
-};
-
-const mostrarFormularioProducto = (categoria) => {
-    const inputProducto = document.createElement("input");
-    inputProducto.type = "text";
-    inputProducto.id = "producto";
-    inputProducto.placeholder = "Producto a añadir al carrito";
-
-    const botonBuscarProducto = document.createElement("button");
-    botonBuscarProducto.textContent = "Seleccionar Producto";
-    const botonSalir = document.createElement("button");
-    botonSalir.textContent = "Salir";
-    const botonVerCarrito = document.createElement("button");
-    botonVerCarrito.textContent = "Ver Carrito";
-    
-    const botonLimpiarCarrito = document.createElement("button");
-    botonLimpiarCarrito.textContent = "Limpiar Carrito";
-
-    const parrafoResultado = document.createElement("p");
-    parrafoResultado.id = "resultado-producto";
-
-    principal.appendChild(inputProducto);
-    principal.appendChild(botonBuscarProducto);
-    principal.appendChild(botonSalir);
-    principal.appendChild(botonVerCarrito);
-    principal.appendChild(botonLimpiarCarrito);
-    principal.appendChild(parrafoResultado);
-
-    botonBuscarProducto.addEventListener("click", () => {
-        const nombreBuscado = inputProducto.value;
-        if (nombreBuscado === "") {
-            alert("Por favor, ingresa un nombre de producto");
-            return;
-        }
-        const producto = buscarProducto(categoriaActual, nombreBuscado);
-        if (producto) {
-            parrafoResultado.textContent = `Espero que disfrutes tu nuevo/a ${producto.nombre}`;
-            agregarAlCarrito(producto);
-        } else {
-            alert("No se encontro el producto. Por favor intenta nuevamente");
-            parrafoResultado.textContent = "No se encontro el producto";
-        }
-    });
-
-    botonSalir.addEventListener("click", () => {
-        if (confirm("Estas seguro de salir?")) {
-            principal.innerHTML = "";
-            alert("Gracias por su visita");
-        }
-    });
-
-    botonVerCarrito.addEventListener("click", () => {
-        mostrarCarrito();
-    });
-
-    botonLimpiarCarrito.addEventListener("click", () => {
-        carrito = [];
-        localStorage.setItem("carrito", JSON.stringify(carrito));
-        Swal.fire({
-            title: "Carrito Limpiado",
-            text: "Tu carrito esta vacio",
-            icon: "success"
-        });
-    });
-};
-
-const buscarProducto = (categoria, nombreDeseado) => {
-    const nombreDeseadoUpper = nombreDeseado.toUpperCase();
-    let productoEncontrado;
-    categoria.forEach(producto => {
-        if (producto.nombre.toUpperCase() === nombreDeseadoUpper) {
-            productoEncontrado = producto;
-        }
-    });
-    return productoEncontrado;
-};
-
-const agregarAlCarrito = (producto) => {
-    if (carrito.some(el => el.id === producto.id)) {
-        const indexProducto = carrito.findIndex(el => el.id === producto.id);
-        carrito[indexProducto].cantidad += 1;
-    } else {
-        const nuevoProducto = {
-            id: producto.id,
-            nombre: producto.nombre,
-            precio: producto.precio,
-            cantidad: 1,
-        };
-        carrito.push(nuevoProducto);
-    }
-    
-    localStorage.setItem("carrito", JSON.stringify(carrito)); 
+document.getElementById("limpiarCarrito").addEventListener("click", () => {
+    carrito = [];
+    localStorage.setItem("carrito", JSON.stringify(carrito));
     Swal.fire({
-        title: "Bien hecho!",
-        text: "Tu producto ha sido añadido al carrito",
-        icon: "success"
+        title: "Carrito Limpiado",
+        text: "Tu carrito esta vacio",
+        icon: "success",
+        confirmButtonText: "Aceptar"
     });
-};
+});
+
+const botonVerCarrito = document.createElement("button");
+botonVerCarrito.textContent = "Ver Carrito";
+botonVerCarrito.classList.add("btnCarrito"); 
+
+const contenedorCarrito = document.createElement("div");
+contenedorCarrito.classList.add("contenedorCarritoFijo"); 
+contenedorCarrito.appendChild(botonVerCarrito);
+document.body.appendChild(contenedorCarrito); 
+
+botonVerCarrito.addEventListener("click", () => {
+    mostrarCarrito();
+});
 
 const mostrarCarrito = () => {
     let mensajeCarrito = "Carrito de Compras:\n";
@@ -191,26 +42,258 @@ const mostrarCarrito = () => {
         });
     }
     
-    alert(mensajeCarrito);
+    Swal.fire(mensajeCarrito);
+};
+const mostrarFormularioNombre = () => {
+    const contenedorNombre = document.createElement("div");
+    contenedorNombre.classList.add("formularioNombre");
+
+    const inputNombre = document.createElement("input");
+    inputNombre.type = "text";
+    inputNombre.id = "nombre";
+    inputNombre.placeholder = "Ingresa tu nombre";
+
+    const botonNombre = document.createElement("button");
+    botonNombre.textContent = "Confirmar nombre";
+    botonNombre.classList.add("btn");
+
+    contenedorNombre.appendChild(inputNombre);
+    contenedorNombre.appendChild(botonNombre);
+    principal.appendChild(contenedorNombre);
+
+    botonNombre.addEventListener("click", () => {
+        const nombre = inputNombre.value;
+        if (nombre === "") {
+            Swal.fire({
+                title: "Error",
+                text: "Por favor, ingresa tu nombre",
+                icon: "error",
+                confirmButtonText: "Aceptar"
+            });
+        } else {
+            Swal.fire({
+                title: `Hola, ${nombre}!`,
+                text: "Selecciona una categoria para continuar",
+                icon: "success",
+                confirmButtonText: "Aceptar"
+            }).then(() => {
+                principal.innerHTML = '';
+                mostrarFormularioCategoria();
+            });
+        }
+    });
+};
+
+const mostrarFormularioCategoria = () => {
+    const contenedorCategoria = document.createElement("div");
+    contenedorCategoria.classList.add("formularioCategoria");
+
+    const etiquetaCategoria = document.createElement("label");
+    etiquetaCategoria.textContent = "Selecciona una categoria:";
+    etiquetaCategoria.htmlFor = "categoria";
+
+    const seleccionarCategoria = document.createElement("select");
+    seleccionarCategoria.id = "categoria";
+    seleccionarCategoria.classList.add("seleccionarCategoria");
+
+    const categorias = ["VEHICULOS", "TECNOLOGIA", "MODA"];
+    categorias.forEach(categoria => {
+        const opcion = document.createElement("option");
+        opcion.value = categoria;
+        opcion.textContent = categoria;
+        seleccionarCategoria.appendChild(opcion);
+    });
+
+    const botonSeleccionarCategoria = document.createElement("button");
+    botonSeleccionarCategoria.textContent = "Mostrar Productos";
+    botonSeleccionarCategoria.classList.add("btn");
+
+    contenedorCategoria.appendChild(etiquetaCategoria);
+    contenedorCategoria.appendChild(seleccionarCategoria);
+    contenedorCategoria.appendChild(botonSeleccionarCategoria);
+    principal.appendChild(contenedorCategoria);
+
+    botonSeleccionarCategoria.addEventListener("click", () => {
+        const categoriaSeleccionada = seleccionarCategoria.value;
+        fetch('Local.json')
+            .then(response => response.json())
+            .then(productos => {
+                switch (categoriaSeleccionada) {
+                    case "VEHICULOS":
+                        categoriaActual = productos.vehiculos;
+                        break;
+                    case "TECNOLOGIA":
+                        categoriaActual = productos.tecnologia;
+                        break;
+                    case "MODA":
+                        categoriaActual = productos.moda;
+                        break;
+                    default:
+                        Swal.fire({
+                            title: "Error",
+                            text: "Categoria no valida",
+                            icon: "error",
+                            confirmButtonText: "Aceptar"
+                        });
+                        return;
+                }
+                
+                principal.innerHTML = "";
+                mostrarProductosEnFormatoTarjeta(categoriaActual);
+            });
+    });
+};
+
+const mostrarProductosEnFormatoTarjeta = (productos) => {
+    const mainComprar = document.createElement("main");
+    mainComprar.classList.add("mainComprar");
+    const seccion = document.createElement("section");
+    const contenedorFlex = document.createElement("div");
+    contenedorFlex.classList.add("flexContainer"); 
+
+    const botonSalir = document.createElement("button");
+    botonSalir.textContent = "Salir";
+    botonSalir.classList.add("btn", "btnSalir");
+
+    botonSalir.addEventListener("click", () => {
+        Swal.fire({
+            title: "¿Quieres salir?",
+            text: "Escribe 'salir' para confirmar",
+            input: 'text',
+            inputPlaceholder: 'Escribe "salir" aqui',
+            preConfirm: (valor) => {
+                if (valor.toLowerCase() === 'salir') {
+                    return true;
+                } else {
+                    Swal.showValidationMessage('Debes escribir "salir" para confirmar');
+                    return false;
+                }
+            }
+        }).then((result) => {
+            if (result.isConfirmed) {
+                carrito = [];
+                localStorage.setItem("carrito", JSON.stringify(carrito));
+                principal.innerHTML = "";
+                Swal.fire({
+                    title: "Esperamos que vuelvas!",
+                    text: "Gracias por visitar nuestra tienda",
+                    icon: "success",
+                    confirmButtonText: "Aceptar"
+                }).then(() => {
+                    mostrarFormularioNombre();
+                });
+            }
+        });
+    });
+
+    principal.appendChild(botonSalir);
+
+    productos.forEach(producto => {
+        const tarjeta = document.createElement("div");
+        tarjeta.classList.add("card");
+
+        const img = document.createElement("img");
+        img.classList.add("cardImage"); 
+        img.src = obtenerImagenPorCategoria(producto.id);
+        img.alt = `Imagen de ${producto.nombre}`;
+
+        const contenidoTarjeta = document.createElement("div");
+        contenidoTarjeta.classList.add("cardContent");
+
+        const tituloTarjeta = document.createElement("h3");
+        tituloTarjeta.classList.add("cardTitle");
+        tituloTarjeta.textContent = producto.nombre;
+
+        const precioGaleria = document.createElement("div");
+        precioGaleria.classList.add("gallery__price");
+
+        const precioGaleriaAnterior = document.createElement("span");
+        precioGaleriaAnterior.classList.add("galleryPrice10"); 
+        precioGaleriaAnterior.textContent = `$${(producto.precio * 1.2).toFixed(2)}`;
+
+        const precioGaleriaActual = document.createElement("span");
+        precioGaleriaActual.classList.add("galleryPrice75");
+        precioGaleriaActual.innerHTML = `<strong>$${producto.precio.toFixed(2)}</strong>`;
+
+        precioGaleria.appendChild(precioGaleriaAnterior);
+        precioGaleria.appendChild(precioGaleriaActual);
+
+        const textoTarjeta = document.createElement("p");
+        textoTarjeta.classList.add("cardText");
+        textoTarjeta.textContent = "Producto de alta calidad disponible ahora";
+
+const botonTarjeta = document.createElement("div");
+botonTarjeta.classList.add("botonTarjeta");
+
+const enlaceTarjeta = document.createElement("button");
+enlaceTarjeta.classList.add("cardLink");
+enlaceTarjeta.textContent = "Comprar";
+enlaceTarjeta.addEventListener("click", () => {
+    agregarAlCarrito(producto);
+    Swal.fire({
+        title: 'Producto agregado',
+        text: `Agregaste ${producto.nombre} al carrito`,
+        icon: 'success',
+        confirmButtonText: 'Aceptar',
+        timer: 4000,
+    });
+});
+
+botonTarjeta.appendChild(enlaceTarjeta);
+
+        contenidoTarjeta.appendChild(tituloTarjeta);
+        contenidoTarjeta.appendChild(precioGaleria);
+        contenidoTarjeta.appendChild(textoTarjeta);
+        contenidoTarjeta.appendChild(botonTarjeta);
+
+        tarjeta.appendChild(img);
+        tarjeta.appendChild(contenidoTarjeta);
+
+        contenedorFlex.appendChild(tarjeta);
+    });
+
+    seccion.appendChild(contenedorFlex);
+
+    mainComprar.appendChild(seccion);
+    principal.appendChild(mainComprar);
+};
+
+const obtenerImagenPorCategoria = (id) => {
+    switch (id) {
+        case 1:
+            return "multimedia/formato-imagen-web.png";
+        case 2:
+            return "multimedia/formato-imagen-web.png";
+        case 3:
+            return "multimedia/formato-imagen-web.png";
+        case 4:
+            return "multimedia/formato-imagen-web.png";
+        case 5:
+            return "multimedia/formato-imagen-web.png";
+        case 6:
+            return "multimedia/formato-imagen-web.png";
+        case 7:
+            return "multimedia/formato-imagen-web.png";
+        case 8:
+            return "multimedia/formato-imagen-web.png";
+        case 9:
+            return "multimedia/formato-imagen-web.png";
+        case 10:
+            return "multimedia/formato-imagen-web.png";
+        default:
+            return "multimedia/formato-imagen-web.png";
+    }
+};
+
+const agregarAlCarrito = (producto) => {
+    const productoExistente = carrito.find(item => item.id === producto.id);
+    if (productoExistente) {
+        productoExistente.cantidad++;
+    } else {
+        producto.cantidad = 1;
+        carrito.push(producto);
+    }
+    localStorage.setItem("carrito", JSON.stringify(carrito));
 };
 
 mostrarFormularioNombre();
-
-const VEHICULOS = [
-    { id: 1, nombre: "Fiat Cronos 1.6", precio: 100000 },
-    { id: 2, nombre: "Peugeot 208 1.6", precio: 170000 },
-    { id: 3, nombre: "Ford Kuga 2.0", precio: 190000 }
-];
-
-const TECNOLOGIA = [
-    { id: 4, nombre: "Xiaomi Redmi 10c", precio: 1100 },
-    { id: 5, nombre: "Motorola Moto", precio: 1700 },
-    { id: 6, nombre: "Samsung Galaxy A14", precio: 1900 }
-];
-
-const MODA = [
-    { id: 7, nombre: "Campera Parka Hombre", precio: 900 },
-    { id: 8, nombre: "Buzo Lacoste", precio: 1100 },
-    { id: 9, nombre: "Buzo Reef", precio: 1200 },
-    { id: 10, nombre: "Zapatillas Converse", precio: 1160 }
-];
